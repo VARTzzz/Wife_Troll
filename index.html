@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conectar WiFi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .banner {
+            background: white;
+            border-radius: 20px;
+            padding: 60px 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .banner:hover::before {
+            left: 100%;
+        }
+
+        .banner:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.4);
+        }
+
+        .banner:active {
+            transform: translateY(-2px);
+        }
+
+        .wifi-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 32px;
+            margin-bottom: 15px;
+        }
+
+        p {
+            color: #666;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 10px 25px;
+            background: #667eea;
+            color: white;
+            border-radius: 25px;
+            font-weight: bold;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+
+        .banner:hover .status {
+            background: #764ba2;
+        }
+
+        .connected {
+            background: #10b981 !important;
+        }
+
+        .waves {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .waves.active {
+            opacity: 1;
+        }
+
+        .wave {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            transform: translateX(-50%);
+            animation: wave-animation 3s ease-out infinite;
+        }
+
+        .wave:nth-child(2) {
+            animation-delay: 1s;
+        }
+
+        .wave:nth-child(3) {
+            animation-delay: 2s;
+        }
+
+        @keyframes wave-animation {
+            0% {
+                transform: translateX(-50%) scale(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(-50%) scale(1);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="banner" id="wifiBanner">
+        <div class="wifi-icon">📶</div>
+        <h1>Conectar ao WiFi</h1>
+        <p>Clique aqui para conectar-se à rede</p>
+        <span class="status" id="status">Desconectado</span>
+        <div class="waves" id="waves">
+            <div class="wave"></div>
+            <div class="wave"></div>
+            <div class="wave"></div>
+        </div>
+    </div>
+
+    <script>
+        const banner = document.getElementById('wifiBanner');
+        const status = document.getElementById('status');
+        const waves = document.getElementById('waves');
+        
+        // Criar elemento de áudio com seu arquivo MP3
+        const audio = new Audio();
+        
+        // OPÇÃO 1: Cole aqui o link direto do seu arquivo MP3 hospedado online
+        // audio.src = 'https://seu-link-aqui.com/seu-audio.mp3';
+        
+        // OPÇÃO 2: Se o arquivo estiver na mesma pasta do HTML, use apenas o nome
+        audio.src = 'gemidao.mp3';
+        
+        // Configurar áudio no volume máximo da página
+        audio.volume = 1.0; // Volume máximo (100%)
+        let isConnected = false;
+
+        banner.addEventListener('click', function() {
+            if (isConnected) return;
+            
+            // Tocar áudio MP3
+            audio.play().catch(err => {
+                console.log('Erro ao tocar áudio:', err);
+            });
+            
+            // Animação de conexão
+            waves.classList.add('active');
+            status.textContent = 'Conectando...';
+            
+            setTimeout(() => {
+                status.textContent = 'Conectado!';
+                status.classList.add('connected');
+                isConnected = true;
+                
+                setTimeout(() => {
+                    waves.classList.remove('active');
+                }, 2000);
+            }, 2000);
+        });
+
+
+    </script>
+</body>
+</html>
